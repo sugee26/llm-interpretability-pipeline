@@ -1,0 +1,51 @@
+# Default configuration for the Interpretable NLP Pipeline
+
+model:
+  name: "distilbert-base-uncased"
+  num_labels: 2
+  max_length: 512
+  dropout: 0.1
+
+training:
+  batch_size: 16
+  learning_rate: 2.0e-5
+  epochs: 3
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  seed: 42
+
+data:
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  text_column: "text"
+  label_column: "label"
+
+preprocessing:
+  lowercase: true
+  remove_urls: true
+  remove_mentions: false
+  remove_hashtags: false
+  min_length: 10
+
+interpretability:
+  methods:
+    - shap
+    - lime
+    - attention
+    - ig
+  shap:
+    num_samples: 100
+  lime:
+    num_samples: 500
+    num_features: 10
+  attention:
+    aggregate_method: "mean"
+  integrated_gradients:
+    n_steps: 50
+
+logging:
+  level: "INFO"
+  save_dir: "./outputs"
+  experiment_name: "nlp_classification"
