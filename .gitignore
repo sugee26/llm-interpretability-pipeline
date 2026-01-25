@@ -42,19 +42,18 @@ env/
 .coverage
 htmlcov/
 
-# Model outputs
-outputs/
-models/
-checkpoints/
+# Model outputs (not src/models module)
+/outputs/
+/models/
+/checkpoints/
 *.pt
 *.pth
 *.bin
 *.onnx
 
-# Data
-data/
+# Data files (not src/data module)
+/data/
 *.csv
-*.json
 *.jsonl
 *.parquet
 
