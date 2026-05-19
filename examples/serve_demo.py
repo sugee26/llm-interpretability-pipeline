@@ -147,4 +147,9 @@ def explain(req: ExplainReq):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8766)
+    # PORT defaults to 8766 locally, 7860 on HF Spaces (their convention).
+    port = int(os.environ.get("PORT", "8766"))
+    # Bind to 0.0.0.0 inside containers (HF Spaces); fall back to localhost
+    # when running on a workstation.
+    host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+    uvicorn.run(app, host=host, port=port)

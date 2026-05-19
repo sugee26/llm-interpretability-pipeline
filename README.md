@@ -1,6 +1,24 @@
+---
+title: LLM Interpretability Pipeline
+emoji: 🔍
+colorFrom: indigo
+colorTo: pink
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+short_description: SHAP + Integrated Gradients + Attention on DistilBERT-SST2
+---
+
 # LLM Interpretability Pipeline
 
 A comprehensive, interpretable machine learning pipeline for NLP classification tasks. This pipeline emphasizes transparency and explainability at every stage, from data preprocessing to model predictions.
+
+## Live demo
+
+Type any sentence in the box at the top of this Space — you'll see three independent attribution methods (Integrated Gradients, last-layer Attention, SHAP) run side-by-side on DistilBERT fine-tuned for SST-2 sentiment. Watching the three methods agree (or disagree) is a quick read on how robust the model's reasoning is for that input.
+
+Source code: `examples/serve_demo.py` · API: `POST /explain {"text": "...", "top_k": 8}`
 
 ## Features
 
