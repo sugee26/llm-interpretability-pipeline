@@ -175,129 +175,143 @@ HTML = r"""
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 <style>
   :root {
-    --bg:#0e1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
-    --muted:#8b949e; --accent:#58a6ff; --pos:#3fb950; --neg:#f85149;
+    --bg:#ffffff; --panel:#ffffff; --border:#e5e7eb; --text:#111827;
+    --muted:#6b7280; --soft:#f9fafb; --accent:#2563eb;
+    --pos:#16a34a; --neg:#dc2626; --neutral:#9ca3af;
   }
+  *{box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--text);
     font-family:-apple-system,system-ui,"Segoe UI",sans-serif;
-    margin:0; padding:0;}
-  .wrap{max-width:1280px;margin:1.5rem auto;padding:0 1.2rem;}
-  h1{font-size:1.3rem;margin:0 0 .2rem;}
-  .sub{color:var(--muted);font-size:.85rem;margin-bottom:1rem;}
-  textarea{width:100%;padding:.7rem;font-size:.95rem;min-height:3.6rem;
-    background:#0d1117;color:var(--text);border:1px solid var(--border);
-    border-radius:6px;box-sizing:border-box;font-family:inherit;}
-  button{padding:.55rem 1.2rem;font-size:.95rem;background:var(--accent);
-    color:#0d1117;border:0;border-radius:6px;cursor:pointer;font-weight:600;}
-  button:disabled{opacity:.4;cursor:not-allowed;}
-  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:.9rem 0;}
-  .metric{background:var(--panel);border:1px solid var(--border);
-    border-radius:8px;padding:.6rem .8rem;}
-  .metric .label{color:var(--muted);font-size:.7rem;letter-spacing:.06em;
-    text-transform:uppercase;}
-  .metric .value{font-size:1.3rem;font-weight:600;margin-top:.15rem;
-    font-variant-numeric:tabular-nums;}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;}
-  .card{background:var(--panel);border:1px solid var(--border);
-    border-radius:8px;padding:.8rem;margin-top:.6rem;}
-  .card h3{margin:0 0 .4rem;font-size:.92rem;font-weight:600;}
-  .card p.help{color:var(--muted);font-size:.78rem;margin:0 0 .55rem;
-    line-height:1.4;}
-  .row{display:flex;justify-content:space-between;padding:1px 0;
-    font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;
-    font-size:.84rem;}
-  .pos{color:var(--neg);} .neg{color:var(--pos);}
-  /* names match attribution direction: positive contribution to NEGATIVE
-     class shows in red, positive contribution to POSITIVE class in green */
-  .pred{display:inline-block;padding:.45rem .9rem;border-radius:6px;
-    margin-top:.4rem;font-size:.88rem;}
-  .pred.NEGATIVE{background:#3a1f1f;color:var(--neg);}
-  .pred.POSITIVE{background:#1d2f1f;color:var(--pos);}
-  .status{color:var(--muted);font-size:.8rem;margin-left:.7rem;}
-  .legend{color:var(--muted);font-size:.72rem;margin-top:.3rem;}
-  @media (max-width:900px){.grid,.grid3,.metrics{grid-template-columns:1fr;}}
+    margin:0;padding:0;line-height:1.45;}
+  .wrap{max-width:1180px;margin:2rem auto;padding:0 1.5rem;}
+  header{margin-bottom:1.4rem;}
+  h1{font-size:1.55rem;font-weight:700;margin:0 0 .3rem;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:.92rem;}
+  textarea{width:100%;padding:.85rem 1rem;font-size:1rem;min-height:3.5rem;
+    background:var(--soft);color:var(--text);border:1px solid var(--border);
+    border-radius:10px;font-family:inherit;resize:vertical;}
+  textarea:focus{outline:none;border-color:var(--accent);background:#fff;}
+  .controls{margin-top:.7rem;display:flex;align-items:center;gap:.8rem;}
+  button{padding:.6rem 1.4rem;font-size:.95rem;background:var(--accent);
+    color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:600;
+    transition:opacity .15s;}
+  button:hover:not(:disabled){opacity:.88;}
+  button:disabled{opacity:.45;cursor:not-allowed;}
+  .status{color:var(--muted);font-size:.88rem;}
+  .pred{margin-left:auto;display:inline-flex;align-items:center;gap:.6rem;
+    padding:.5rem 1rem;border-radius:8px;font-size:.95rem;font-weight:600;}
+  .pred.NEGATIVE{background:#fef2f2;color:var(--neg);}
+  .pred.POSITIVE{background:#f0fdf4;color:var(--pos);}
+  .pred .conf{font-variant-numeric:tabular-nums;font-weight:500;
+    color:var(--muted);font-size:.85rem;}
+
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;
+    margin:1.5rem 0 1rem;}
+  .metric{background:var(--soft);border:1px solid var(--border);
+    border-radius:10px;padding:.85rem 1rem;}
+  .metric .label{color:var(--muted);font-size:.72rem;letter-spacing:.05em;
+    text-transform:uppercase;font-weight:600;}
+  .metric .value{font-size:1.55rem;font-weight:700;margin-top:.2rem;
+    font-variant-numeric:tabular-nums;color:var(--text);letter-spacing:-.02em;}
+  .metric .hint{color:var(--muted);font-size:.75rem;margin-top:.1rem;}
+
+  .panel{background:var(--panel);border:1px solid var(--border);
+    border-radius:12px;padding:1.2rem;margin-top:1rem;}
+  .panel h2{margin:0 0 .35rem;font-size:1.02rem;font-weight:600;
+    letter-spacing:-.005em;}
+  .panel .why{color:var(--muted);font-size:.84rem;margin:0 0 1rem;
+    max-width:780px;line-height:1.5;}
+  .panel .plot{height:280px;}
+  .panel .plot.tall{height:340px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;}
+  @media (max-width:880px){
+    .metrics{grid-template-columns:repeat(2,1fr);}
+    .row2{grid-template-columns:1fr;}
+    .pred{margin-left:0;}
+    .controls{flex-wrap:wrap;}
+  }
 </style></head><body><div class=wrap>
-<h1>LLM Interpretability — DistilBERT SST-2</h1>
-<div class=sub>Token attribution · logit lens · attention entropy · classifier neurons · saliency · cross-method agreement</div>
+
+<header>
+  <h1>LLM Interpretability — DistilBERT SST-2</h1>
+  <div class=sub>Five views into how the model decided. Type a sentence below.</div>
+</header>
 
 <textarea id=t>The movie was visually stunning but the plot was completely incoherent.</textarea>
-<div style="margin-top:.5rem;display:flex;align-items:center">
+<div class=controls>
   <button id=btn onclick=go()>Explain</button>
   <span id=status class=status></span>
-  <span id=pred class=pred style="display:none;margin-left:auto"></span>
+  <span id=pred class=pred style="display:none"></span>
 </div>
 
 <div class=metrics id=metrics style="display:none">
-  <div class=metric><div class=label>Prediction confidence</div><div class=value id=m_conf>-</div></div>
-  <div class=metric><div class=label>Decision layer (lens flip)</div><div class=value id=m_layer>-</div></div>
-  <div class=metric><div class=label>Mean attn entropy (bits)</div><div class=value id=m_ent>-</div></div>
-  <div class=metric><div class=label>Method agreement (top-5)</div><div class=value id=m_agree>-</div></div>
+  <div class=metric>
+    <div class=label>Confidence</div>
+    <div class=value id=m_conf>—</div>
+    <div class=hint>P(predicted class)</div>
+  </div>
+  <div class=metric>
+    <div class=label>Decision Layer</div>
+    <div class=value id=m_layer>—</div>
+    <div class=hint>where the model commits</div>
+  </div>
+  <div class=metric>
+    <div class=label>Attention Focus</div>
+    <div class=value id=m_ent>—</div>
+    <div class=hint>lower entropy = sharper</div>
+  </div>
+  <div class=metric>
+    <div class=label>Method Agreement</div>
+    <div class=value id=m_agree>—</div>
+    <div class=hint>across IG · Attn · SHAP</div>
+  </div>
 </div>
 
 <div id=out style="display:none">
-  <div class=grid3>
-    <div class=card>
-      <h3>Integrated Gradients</h3>
-      <p class=help>How much each token's embedding pushed toward the prediction, via path-integrated gradients (Captum).</p>
-      <div id=col_ig></div>
+
+  <div class=panel>
+    <h2>1 · Which tokens drove the prediction</h2>
+    <p class=why>Three independent attribution methods scored each token. Bars show the average score; agreement across methods is the trust signal.</p>
+    <div id=p1 class="plot tall"></div>
+  </div>
+
+  <div class=row2>
+    <div class=panel>
+      <h2>2 · When did the model decide</h2>
+      <p class=why>Apply the classifier head to the CLS state at every layer. The crossing point is when the prediction crystallizes.</p>
+      <div id=p2 class=plot></div>
     </div>
-    <div class=card>
-      <h3>Attention (last layer, CLS→token)</h3>
-      <p class=help>Average over 12 heads of attention from CLS to each input token in the final layer.</p>
-      <div id=col_attn></div>
-    </div>
-    <div class=card>
-      <h3>SHAP</h3>
-      <p class=help>Shapley-value token contributions to the predicted class probability.</p>
-      <div id=col_shap></div>
+    <div class=panel>
+      <h2>3 · Where the attention looks</h2>
+      <p class=why>6 layers × 12 heads. Bright = a focused head (low entropy); dim = diffuse / less informative.</p>
+      <div id=p3 class=plot></div>
     </div>
   </div>
 
-  <div class=grid>
-    <div class=card>
-      <h3>Logit Lens — confidence by layer</h3>
-      <p class=help>Apply the classifier head to the CLS hidden state at every layer. Watch the model's "running guess" crystallize. Early flip = easy input; late flip = hard / hallucination-prone.</p>
-      <div id=plot_lens style="height:280px"></div>
+  <div class=row2>
+    <div class=panel>
+      <h2>4 · Which hidden units fired</h2>
+      <p class=why>Top classifier neurons by contribution to the predicted logit. The grey bar is the same neuron's pull on the opposite class.</p>
+      <div id=p4 class=plot></div>
     </div>
-    <div class=card>
-      <h3>Attention head focus (6 layers × 12 heads)</h3>
-      <p class=help>Brighter = more focused (low entropy) attention from CLS. Dimmer = diffuse / less informative head.</p>
-      <div id=plot_attn_heatmap style="height:280px"></div>
-    </div>
-  </div>
-
-  <div class=grid>
-    <div class=card>
-      <h3>Top classifier neurons</h3>
-      <p class=help>Decomposes the final logit. <i>contrib = pre-activation × classifier weight</i>, per hidden-dim index. Same neuron's pull on the other class shown for contrast.</p>
-      <div id=plot_neurons style="height:300px"></div>
-    </div>
-    <div class=card>
-      <h3>Input gradient saliency (per token)</h3>
-      <p class=help>L2 norm of ∂logit/∂embedding per token, normalized. Tokens the model is most sensitive to — bigger = bigger flip if removed.</p>
-      <div id=plot_saliency style="height:300px"></div>
+    <div class=panel>
+      <h2>5 · Do the methods agree</h2>
+      <p class=why>Jaccard overlap between the top-5 tokens picked by each pair of methods. High = robust attribution; low = methods disagree on what mattered.</p>
+      <div id=p5 class=plot></div>
     </div>
   </div>
 
-  <div class=card>
-    <h3>Cross-method agreement</h3>
-    <p class=help>Jaccard overlap between the top-5 tokens chosen by each pair of methods. High agreement = robust attribution; low agreement = methods disagree on what mattered.</p>
-    <div id=plot_agree style="height:200px"></div>
-  </div>
 </div>
 
 <script>
-const NEG_COLOR='#f85149', POS_COLOR='#3fb950', NEUTRAL='#8b949e';
-const LAYOUT_BASE = {paper_bgcolor:'#161b22', plot_bgcolor:'#161b22',
-  font:{color:'#e6edf3', family:'-apple-system, system-ui, sans-serif', size:11},
-  margin:{l:50, r:10, t:25, b:40}, hovermode:'closest'};
-
-function row(tok, val, key) {
-  const cls = val >= 0 ? 'pos' : 'neg';
-  const sign = val >= 0 ? '+' : '';
-  return `<div class=row><span>${tok}</span><span class=${cls}>${sign}${val.toFixed(3)}</span></div>`;
-}
+const POS='#16a34a', NEG='#dc2626', BLUE='#2563eb', GREY='#9ca3af', AMBER='#d97706';
+const LAYOUT_BASE = {
+  paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff',
+  font:{color:'#111827', family:'-apple-system, system-ui, sans-serif', size:11.5},
+  margin:{l:60, r:18, t:18, b:50}, hovermode:'closest',
+  xaxis:{linecolor:'#e5e7eb', gridcolor:'#f3f4f6', zerolinecolor:'#e5e7eb'},
+  yaxis:{linecolor:'#e5e7eb', gridcolor:'#f3f4f6', zerolinecolor:'#e5e7eb'},
+};
 
 async function go() {
   const btn = document.getElementById('btn');
@@ -307,13 +321,13 @@ async function go() {
   const pred = document.getElementById('pred');
   const metrics = document.getElementById('metrics');
   btn.disabled = true;
-  status.textContent = 'running 5 explainers (~10–25 s)...';
+  status.textContent = 'analyzing (~10–25s) …';
   out.style.display = 'none'; pred.style.display = 'none'; metrics.style.display = 'none';
   const t0 = performance.now();
   try {
     const r = await fetch('/explain', {method:'POST',
       headers:{'content-type':'application/json'},
-      body: JSON.stringify({text, top_k: 10})});
+      body: JSON.stringify({text, top_k: 12})});
     if (!r.ok) throw new Error('http ' + r.status);
     const j = await r.json();
     const dt = ((performance.now() - t0)/1000).toFixed(1);
@@ -326,95 +340,146 @@ async function go() {
   }
 }
 
-function render(j) {
-  // header
-  const pred = document.getElementById('pred');
-  pred.textContent = `${j.label}  ·  P=${j.probs[j.pred_idx].toFixed(3)}`;
-  pred.className = 'pred ' + j.label;
-  pred.style.display = 'inline-block';
+// merge IG / Attention / SHAP into one token-importance view.
+// Each method picks top tokens with absolute scores normalized to [-1, +1] for
+// the pull-toward-prediction direction; "+" means pushes toward predicted class.
+function buildTokenImportance(j) {
+  const isPos = j.pred_idx === 1;
+  const normalize = (items, ref) => {
+    const max = Math.max(...items.map(x => Math.abs(x.attribution))) || 1;
+    return Object.fromEntries(items.map(x => [x.token.toString().trim(), x.attribution / max]));
+  };
+  const igMap = normalize(j.ig);
+  const attnMap = Object.fromEntries(j.attn.map(x => {
+    const max = Math.max(...j.attn.map(y => Math.abs(y.attribution))) || 1;
+    return [x.token.toString().trim(), x.attribution / max];
+  }));
+  const shapMap = normalize(j.shap);
+  // union of tokens, sorted by mean absolute score
+  const allToks = new Set([...Object.keys(igMap), ...Object.keys(attnMap), ...Object.keys(shapMap)]);
+  const rows = [...allToks]
+    .filter(t => t && t !== '[CLS]' && t !== '[SEP]' && t !== '[PAD]')
+    .map(t => ({
+      tok: t,
+      ig: igMap[t] || 0,
+      attn: attnMap[t] || 0,
+      shap: shapMap[t] || 0,
+    }))
+    .map(r => ({...r, mean_abs: (Math.abs(r.ig) + Math.abs(r.attn) + Math.abs(r.shap)) / 3}))
+    .sort((a, b) => b.mean_abs - a.mean_abs)
+    .slice(0, 12);
+  return rows.reverse(); // bottom-to-top in horizontal chart
+}
 
-  // metrics
+function render(j) {
+  // header pill
+  const pred = document.getElementById('pred');
+  pred.innerHTML = `${j.label} <span class=conf>P = ${j.probs[j.pred_idx].toFixed(3)}</span>`;
+  pred.className = 'pred ' + j.label;
+  pred.style.display = 'inline-flex';
+
+  // top metrics
   document.getElementById('m_conf').textContent = (j.probs[j.pred_idx]*100).toFixed(1) + '%';
   document.getElementById('m_layer').textContent =
     j.lens.decision_layer !== null ? `L${j.lens.decision_layer} / L${j.lens.per_layer.length-1}` : '—';
-  document.getElementById('m_ent').textContent = j.entropy_mean.toFixed(2);
+  document.getElementById('m_ent').textContent = j.entropy_mean.toFixed(2) + ' bits';
   document.getElementById('m_agree').textContent = (j.agreement.mean*100).toFixed(0) + '%';
   document.getElementById('metrics').style.display = 'grid';
 
-  // attribution columns
-  const col = (id, items, key) => {
-    document.getElementById(id).innerHTML =
-      items.slice(0, 10).map(x => row(x.token, x[key], key)).join('');
-  };
-  col('col_ig', j.ig, 'attribution');
-  col('col_attn', j.attn, 'attribution');
-  col('col_shap', j.shap, 'attribution');
-
-  // logit lens
-  const lensX = j.lens.per_layer.map(d => d.layer);
-  Plotly.newPlot('plot_lens', [
-    {x: lensX, y: j.lens.per_layer.map(d => d.p_pos), type:'scatter', mode:'lines+markers',
-      name:'P(positive)', line:{color: POS_COLOR, width:3}, marker:{size:8}},
-    {x: lensX, y: j.lens.per_layer.map(d => d.p_neg), type:'scatter', mode:'lines+markers',
-      name:'P(negative)', line:{color: NEG_COLOR, width:3}, marker:{size:8}},
-    {x: lensX, y: lensX.map(() => 0.5), type:'scatter', mode:'lines',
-      line:{color:NEUTRAL, dash:'dot', width:1}, showlegend:false, hoverinfo:'skip'},
-  ], {...LAYOUT_BASE, xaxis:{title:'Layer', dtick:1, gridcolor:'#30363d'},
-       yaxis:{title:'P(class)', range:[0,1], gridcolor:'#30363d'},
-       legend:{orientation:'h', y:1.15}}, {responsive:true, displayModeBar:false});
-
-  // attention heatmap
-  const z = j.attn_heatmap.map(r => r.focus);  // 1 - entropy/log(seq)
-  Plotly.newPlot('plot_attn_heatmap', [{
-    z: z, type:'heatmap', colorscale:'Viridis',
-    x: Array.from({length: z[0].length}, (_,i) => 'H'+i),
-    y: z.map((_,i) => 'L'+i),
-    hovertemplate: 'Layer %{y}, Head %{x}<br>focus %{z:.3f}<extra></extra>',
-    colorbar:{title:'focus', thickness:10},
-  }], {...LAYOUT_BASE, xaxis:{title:'Head', side:'top'}, yaxis:{autorange:'reversed', title:'Layer'}},
+  // PANEL 1: Token importance (3 methods combined)
+  const tok = buildTokenImportance(j);
+  Plotly.newPlot('p1', [
+    {y: tok.map(r => r.tok), x: tok.map(r => r.ig),
+      type:'bar', orientation:'h', name:'Integrated Gradients',
+      marker:{color: BLUE}},
+    {y: tok.map(r => r.tok), x: tok.map(r => r.attn),
+      type:'bar', orientation:'h', name:'Attention',
+      marker:{color: AMBER}},
+    {y: tok.map(r => r.tok), x: tok.map(r => r.shap),
+      type:'bar', orientation:'h', name:'SHAP',
+      marker:{color: POS}},
+  ], {...LAYOUT_BASE, barmode:'group', height:340,
+       margin:{l:90, r:18, t:18, b:42},
+       xaxis:{...LAYOUT_BASE.xaxis, title:'token contribution (normalized)', range:[-1.05, 1.05]},
+       yaxis:{...LAYOUT_BASE.yaxis, automargin:true},
+       legend:{orientation:'h', y:-0.18, x:0.5, xanchor:'center'}},
      {responsive:true, displayModeBar:false});
 
-  // top neurons
-  const ns = j.neurons;
-  const labels = ns.map(n => `n${n.neuron}`);
-  Plotly.newPlot('plot_neurons', [
-    {x: labels, y: ns.map(n => n.contrib_predicted),
+  // PANEL 2: Logit lens
+  const lx = j.lens.per_layer.map(d => d.layer);
+  const predTrace = j.pred_idx === 1
+    ? j.lens.per_layer.map(d => d.p_pos)
+    : j.lens.per_layer.map(d => d.p_neg);
+  Plotly.newPlot('p2', [
+    {x: lx, y: predTrace, type:'scatter', mode:'lines+markers',
+      name:`P(${j.label.toLowerCase()})`,
+      line:{color: j.pred_idx === 1 ? POS : NEG, width:3, shape:'spline'},
+      marker:{size:9}},
+    {x: lx, y: lx.map(() => 0.5), type:'scatter', mode:'lines',
+      line:{color:GREY, dash:'dot', width:1.5}, name:'50% threshold',
+      hoverinfo:'skip'},
+  ], {...LAYOUT_BASE,
+       xaxis:{...LAYOUT_BASE.xaxis, title:'Layer', dtick:1},
+       yaxis:{...LAYOUT_BASE.yaxis, title:'Confidence', range:[0,1], tickformat:'.0%'},
+       showlegend:false},
+     {responsive:true, displayModeBar:false});
+
+  // PANEL 3: Attention focus heatmap
+  const z = j.attn_heatmap.map(r => r.focus);
+  Plotly.newPlot('p3', [{
+    z: z, type:'heatmap',
+    colorscale:[[0,'#f3f4f6'],[0.5,'#93c5fd'],[1,'#1d4ed8']],
+    x: Array.from({length: z[0].length}, (_,i) => i),
+    y: z.map((_,i) => i),
+    hovertemplate: 'Layer %{y}, Head %{x}<br>focus %{z:.2f}<extra></extra>',
+    colorbar:{title:'', thickness:10, len:0.85, tickfont:{size:10}},
+  }], {...LAYOUT_BASE,
+       xaxis:{...LAYOUT_BASE.xaxis, title:'Head', dtick:1, side:'bottom'},
+       yaxis:{...LAYOUT_BASE.yaxis, title:'Layer', dtick:1, autorange:'reversed'}},
+     {responsive:true, displayModeBar:false});
+
+  // PANEL 4: Top neurons
+  const ns = j.neurons.slice(0, 10);
+  const predColor = j.pred_idx === 1 ? POS : NEG;
+  Plotly.newPlot('p4', [
+    {x: ns.map(n => `n${n.neuron}`),
+      y: ns.map(n => n.contrib_predicted),
       type:'bar', name:`→ ${j.label}`,
-      marker:{color: ns.map(n => n.contrib_predicted >= 0
-        ? (j.label === 'POSITIVE' ? POS_COLOR : NEG_COLOR) : NEUTRAL)}},
-    {x: labels, y: ns.map(n => n.contrib_other),
-      type:'bar', name:`→ ${j.label === 'POSITIVE' ? 'NEGATIVE' : 'POSITIVE'}`,
-      marker:{color: NEUTRAL}, opacity:0.55},
-  ], {...LAYOUT_BASE, barmode:'group', xaxis:{title:'CLS-head hidden dim'},
-       yaxis:{title:'contribution to logit', gridcolor:'#30363d'},
-       legend:{orientation:'h', y:1.15}}, {responsive:true, displayModeBar:false});
-
-  // saliency
-  Plotly.newPlot('plot_saliency', [{
-    x: j.saliency.map(s => s.token),
-    y: j.saliency.map(s => s.saliency),
-    type:'bar', marker:{color: '#58a6ff'},
-    hovertemplate: '%{x}: %{y:.3f}<extra></extra>',
-  }], {...LAYOUT_BASE, xaxis:{title:'token', tickangle:-30},
-        yaxis:{title:'‖∂logit/∂embed‖ (normalized)', range:[0,1], gridcolor:'#30363d'}},
+      marker:{color: predColor},
+      hovertemplate:'%{x}<br>contrib %{y:+.3f}<extra></extra>'},
+    {x: ns.map(n => `n${n.neuron}`),
+      y: ns.map(n => n.contrib_other),
+      type:'bar', name:`→ opposite class`,
+      marker:{color: GREY},
+      hovertemplate:'%{x}<br>contrib %{y:+.3f}<extra></extra>'},
+  ], {...LAYOUT_BASE, barmode:'group',
+       xaxis:{...LAYOUT_BASE.xaxis, title:'classifier hidden-dim index'},
+       yaxis:{...LAYOUT_BASE.yaxis, title:'contribution to logit', zeroline:true},
+       legend:{orientation:'h', y:-0.22, x:0.5, xanchor:'center'}},
      {responsive:true, displayModeBar:false});
 
-  // agreement gauge
+  // PANEL 5: Method agreement
   const pairs = [
     ['IG vs Attention', j.agreement.ig_vs_attn],
     ['IG vs SHAP', j.agreement.ig_vs_shap],
     ['Attention vs SHAP', j.agreement.attn_vs_shap],
-    ['mean', j.agreement.mean],
   ];
-  Plotly.newPlot('plot_agree', [{
-    x: pairs.map(p => p[1]*100),
+  Plotly.newPlot('p5', [{
     y: pairs.map(p => p[0]),
+    x: pairs.map(p => p[1]*100),
     type:'bar', orientation:'h',
-    marker:{color: pairs.map(p => p[1] >= 0.5 ? POS_COLOR : (p[1] >= 0.25 ? '#d29922' : NEG_COLOR))},
+    marker:{color: pairs.map(p =>
+      p[1] >= 0.5 ? POS : (p[1] >= 0.25 ? AMBER : NEG))},
     text: pairs.map(p => (p[1]*100).toFixed(0)+'%'),
-    textposition:'auto', textfont:{color:'#0d1117'},
-  }], {...LAYOUT_BASE, xaxis:{range:[0,100], title:'% top-5 token overlap', gridcolor:'#30363d'},
-        yaxis:{autorange:'reversed'}}, {responsive:true, displayModeBar:false});
+    textposition:'outside', textfont:{size:12, color:'#111827'},
+    hovertemplate:'%{y}: %{x:.0f}%<extra></extra>',
+    cliponaxis: false,
+  }], {...LAYOUT_BASE,
+        xaxis:{...LAYOUT_BASE.xaxis, range:[0,115], title:'% top-5 token overlap',
+               ticksuffix:'%', dtick:25},
+        yaxis:{...LAYOUT_BASE.yaxis, autorange:'reversed', automargin:true},
+        margin:{l:130, r:30, t:18, b:42}},
+     {responsive:true, displayModeBar:false});
 
   document.getElementById('out').style.display = 'block';
 }
