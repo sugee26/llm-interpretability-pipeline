@@ -53,8 +53,23 @@ class AttentionVisualizer:
         )
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
-        with torch.no_grad():
-            outputs = self.model(**inputs, output_attentions=True)
+        # Newer transformers default to SDPA, which silently drops output_attentions.
+        # Force eager attention for this forward pass only.
+        prev_impl = getattr(self.model.config, "_attn_implementation", None)
+        try:
+            self.model.config._attn_implementation = "eager"
+            with torch.no_grad():
+                outputs = self.model(**inputs, output_attentions=True)
+        finally:
+            if prev_impl is not None:
+                self.model.config._attn_implementation = prev_impl
+
+        if not outputs.attentions:
+            raise RuntimeError(
+                "Model did not return attentions. Load the model with "
+                "AutoModelForSequenceClassification.from_pretrained(..., "
+                "attn_implementation='eager')."
+            )
 
         # Shape: (num_layers, batch, num_heads, seq_len, seq_len)
         attentions = torch.stack(outputs.attentions)

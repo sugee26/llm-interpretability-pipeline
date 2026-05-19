@@ -164,7 +164,7 @@ class IntegratedGradientsExplainer:
         )
 
         # Sum across embedding dimension to get per-token attribution
-        token_attributions = attributions.sum(dim=-1).squeeze(0).cpu().numpy()
+        token_attributions = attributions.sum(dim=-1).squeeze(0).detach().cpu().numpy()
 
         # Normalize
         token_attributions = token_attributions / np.abs(token_attributions).max()

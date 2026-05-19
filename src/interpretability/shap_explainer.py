@@ -73,19 +73,24 @@ class SHAPExplainer:
         num_samples: int = 100,
         visualize: bool = False,
         target_class: Optional[int] = None,
+        max_evals: Optional[int] = None,
     ) -> Dict:
         """
         Generate SHAP explanation for a text.
 
         Args:
             text: Input text to explain
-            num_samples: Number of perturbation samples
+            num_samples: Number of perturbation samples (alias: max_evals)
             visualize: Whether to display visualization
             target_class: Specific class to explain (None for predicted class)
+            max_evals: Alias for num_samples (matches shap.Explainer naming
+                and the README example)
 
         Returns:
             Dictionary containing SHAP values and metadata
         """
+        if max_evals is not None:
+            num_samples = max_evals
         # Create masker for text
         masker = shap.maskers.Text(self.tokenizer)
 
